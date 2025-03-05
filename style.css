@@ -17,7 +17,8 @@ main {
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  background-color: #ff8c6b;
+  background-color: #534646bd;
+
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -79,12 +80,12 @@ form.sign-up-form {
 }
 
 .logo img {
-  width: 27px;
+  width: 39px;
   margin-right: 0.3rem;
 }
 
 .logo h4 {
-  font-size: 1.1rem;
+  font-size: 2.0rem;
   margin-top: -9px;
   letter-spacing: -0.5px;
   color: #151111;
@@ -390,4 +391,62 @@ main.sign-up-mode .carousel {
   form {
     padding: 1rem 2rem 1.5rem;
   }
+}
+
+/* Add these new styles to your existing CSS file */
+
+.textarea {
+  height: 100px !important;
+  resize: none;
+  padding-top: 8px;
+}
+
+select.input-field {
+  cursor: pointer;
+}
+
+select.input-field option {
+  color: #151111;
+}
+
+/* Modify the input-wrap for textareas */
+.input-wrap {
+  position: relative;
+  height: 37px;
+  margin-bottom: 2rem;
+}
+
+.input-wrap:has(.textarea) {
+  height: 100px;
+}
+
+/* Adjust the form max-height and scrolling */
+form {
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+/* Style the scrollbar */
+form::-webkit-scrollbar {
+  width: 8px;
+}
+
+form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+form::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Adjust placeholder text color */
+::placeholder {
+  color: #bbb;
+  font-size: 0.8rem;
 }

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.28.0"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .voice-input button {
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .voice-input button:hover {
+            background-color: #45a049;
+        }
+
+        .task-actions button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .task-actions button:hover {
+            background-color: #1976D2;
+        }
+
+        .task-details {
+            margin-top: 20px;
+            text-align: left;
+            display: none; /* Hidden by default */
+        }
+
+        #taskText {
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+
+        <!-- Voice Input Section -->
+        <div class="voice-input">
+            <button id="voiceBtn">Start Voice Input</button>
+            <p id="taskText">Task will appear here...</p>
+        </div>
+
+        <!-- Task Details Section -->
+        <div class="task-details" id="taskDetails">
+            <h3>Task Details</h3>
+            <p id="taskDescription">Task: </p>
+            <p id="taskCategory">Category: </p>
+            <p id="taskDeadline">Deadline: </p>
+            <button id="editBtn" onclick="editTask()">Edit Task</button>
+        </div>
+    </div>
+
+    <script >
+        // Initialize the speech recognition API
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'en-US';
+recognition.continuous = false;  // Stops after speech ends
+recognition.interimResults = false;  // No intermediate results
+
+let taskDescription = ""; // Store the task description
+
+// Start voice recognition when button is clicked
+document.getElementById('voiceBtn').addEventListener('click', () => {
+    recognition.start();
+});
+
+// Capture voice input and process task
+recognition.onresult = function (event) {
+    const transcript = event.results[0][0].transcript;
+    taskDescription = transcript;
+    document.getElementById('taskText').innerText = `You said: "${taskDescription}"`;
+    
+    processTask(taskDescription);
+};
+
+// Handle speech recognition errors
+recognition.onerror = function (event) {
+    console.error('Speech recognition error:', event.error);
+    alert('An error occurred while recognizing your speech. Please try again.');
+};
+
+// Process the task using NLP
+function processTask(task) {
+    const category = classifyTask(task);
+    const deadline = extractDeadline(task);
+
+    // Display extracted details
+    document.getElementById('taskDescription').innerText = `Task: ${task}`;
+    document.getElementById('taskCategory').innerText = `Category: ${category}`;
+    document.getElementById('taskDeadline').innerText = `Deadline: ${deadline}`;
+
+    // Show the task details section
+    document.getElementById('taskDetails').style.display = 'block';
+}
+
+// Function to classify the task (mock-up for now)
+function classifyTask(task) {
+    if (task.includes("tax report")) return "Finance";
+    if (task.includes("doctor")) return "Health";
+    return "General";
+}
+
+// Extract deadline from voice command
+function extractDeadline(task) {
+    let deadline = "No deadline specified";
+
+    // Match phrases like "by Monday 11:00 a.m."
+    const datePattern = /\b(by|on|next|this|coming)?\s*(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i;
+    const timePattern = /\b(\d{1,2}(:\d{2})?\s*(AM|PM|am|pm))\b/i;
+
+    const dateMatch = task.match(datePattern);
+    const timeMatch = task.match(timePattern);
+
+    if (dateMatch) {
+        const today = new Date();
+        const nextDay = getNextWeekday(today, dateMatch[2]); // Extract day
+        deadline = `${dateMatch[2]}, ${nextDay.toDateString()}`;
+    }
+
+    if (timeMatch) {
+        const timeString = timeMatch[0];
+        const time = parseTimeToDate(timeString);
+        if (time) {
+            deadline = `${deadline} at ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+    }
+
+    return deadline;
+}
+
+// Helper function to find the next occurrence of a weekday
+function getNextWeekday(date, dayName) {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const todayIndex = date.getDay();
+    const targetIndex = daysOfWeek.indexOf(dayName);
+
+    let daysToAdd = (targetIndex - todayIndex + 7) % 7;
+    if (daysToAdd === 0) daysToAdd = 7; // Ensure it selects the next occurrence
+
+    const resultDate = new Date(date);
+    resultDate.setDate(date.getDate() + daysToAdd);
+    return resultDate;
+}
+
+// Helper function to convert time string to Date object
+function parseTimeToDate(timeStr) {
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    
+    if (period && period.toLowerCase().includes('pm') && hours < 12) hours += 12;
+    if (period && period.toLowerCase().includes('am') && hours === 12) hours = 0;
+
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes || 0);
+    date.setSeconds(0);
+    return date;
+}
+
+// Edit Task
+function editTask() {
+    const newDescription = prompt("Edit your task:", taskDescription);
+    if (newDescription !== null && newDescription !== "") {
+        taskDescription = newDescription;
+        document.getElementById('taskText').innerText = `You said: "${taskDescription}"`;
+        processTask(taskDescription);
+    }
+}
+
+    </script> <!-- Linking to external JS -->
+</body>
+</html>
