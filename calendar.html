@@ -657,6 +657,9 @@
     const todayBtn = document.getElementById('todayBtn');
     const viewButtons = document.querySelectorAll('.view-btn');
 
+
+    let currentView = 'month';
+let timelineStartDate = new Date();
     // Current date
     let currentDate = new Date();
     let selectedDate = new Date();
@@ -666,19 +669,172 @@
 
     // Event listeners for navigation
     prevMonthBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
-    });
+    } else {
+        timelineStartDate.setDate(timelineStartDate.getDate() - (currentView === 'week' ? 7 : 1));
+        renderTimelineView(currentView);
+    }
+});
 
-    nextMonthBtn.addEventListener('click', () => {
+nextMonthBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar();
-    });
+    } else {
+        timelineStartDate.setDate(timelineStartDate.getDate() + (currentView === 'week' ? 7 : 1));
+        renderTimelineView(currentView);
+    }
+});
 
-    todayBtn.addEventListener('click', () => {
+todayBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
         currentDate = new Date();
         renderCalendar();
+    } else {
+        timelineStartDate = new Date();
+        renderTimelineView(currentView);
+    }
+});
+
+    // Update the renderTimelineView function
+    async function renderTimelineView(view) {
+    const timelineContent = document.querySelector('.timeline-content');
+    timelineContent.innerHTML = '';
+
+    // Calculate date range based on view
+    let startDate, endDate;
+    if (view === 'week') {
+        startDate = new Date(timelineStartDate);
+        startDate.setDate(startDate.getDate() - startDate.getDay());
+        endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + 6);
+    } else { // day view
+        startDate = new Date(timelineStartDate);
+        startDate.setHours(0,0,0,0);
+        endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + 1);
+    }
+
+    // Generate timeline header
+    const headerDays = document.querySelector('.timeline-header');
+    headerDays.innerHTML = `<div class="timeline-time-label">Time</div>`;
+    
+    // Generate day columns
+    const dayColumns = document.createElement('div');
+    dayColumns.style.display = 'contents';
+    
+    let currentDate = new Date(startDate);
+    let daysToShow = view === 'week' ? 7 : 1;
+    
+    for (let i = 0; i < daysToShow; i++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'timeline-day';
+        dayElement.textContent = currentDate.toLocaleDateString('en-US', { 
+            weekday: 'short',
+            month: view === 'day' ? 'short' : undefined,
+            day: view === 'day' ? 'numeric' : undefined
+        });
+        headerDays.appendChild(dayElement);
+        
+        // Create day column
+        const dayColumn = document.createElement('div');
+        dayColumn.className = 'day-column';
+        dayColumn.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
+        dayColumns.appendChild(dayColumn);
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Generate hours column
+    const hoursColumn = document.createElement('div');
+    hoursColumn.className = 'timeline-hours';
+    for (let hour = 0; hour < 24; hour++) {
+        const hourElement = document.createElement('div');
+        hourElement.className = 'hour-slot';
+        hourElement.textContent = `${hour.toString().padStart(2, '0')}:00`;
+        hoursColumn.appendChild(hourElement);
+    }
+
+    timelineContent.appendChild(hoursColumn);
+    timelineContent.appendChild(dayColumns);
+
+    // Fetch and display tasks
+    const tasks = await fetchTasksByDateRange(startDate, endDate);
+    
+    tasks.forEach(task => {
+        const taskDate = new Date(task.task_date);
+        const dayColumn = document.querySelector(`.day-column[data-date="${task.task_date}"]`);
+        
+        if (!dayColumn) return;
+
+        const start = parseTime(task.start_time);
+        const end = parseTime(task.end_time);
+        
+        if (!start || !end) return;
+
+        const taskElement = document.createElement('div');
+        taskElement.className = 'timeline-task';
+        taskElement.textContent = task.title;
+        taskElement.style.top = `${(start.hours * 60 + start.minutes)}px`;
+        taskElement.style.height = `${(end.hours * 60 + end.minutes) - (start.hours * 60 + start.minutes)}px`;
+
+        // Apply priority colors
+        if (task.priority === 'high') {
+            taskElement.style.backgroundColor = 'rgba(244, 67, 54, 0.2)';
+            taskElement.style.borderLeftColor = '#f44336';
+        } else if (task.priority === 'medium') {
+            taskElement.style.backgroundColor = 'rgba(67, 97, 238, 0.2)';
+            taskElement.style.borderLeftColor = '#4361ee';
+        } else if (task.priority === 'low') {
+            taskElement.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+            taskElement.style.borderLeftColor = '#4caf50';
+        }
+
+        taskElement.addEventListener('click', () => openEditTaskModal(task));
+        dayColumn.appendChild(taskElement);
     });
+}
+// Add these helper functions
+async function fetchTasksByDateRange(startDate, endDate) {
+    try {
+        const response = await fetch(`http://localhost/task_manager/api.php?action=get_tasks&start=${startDate.toISOString()}&end=${endDate.toISOString()}`);
+        const tasks = await response.json();
+        return tasks;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return [];
+    }
+}
+
+function parseTime(timeString) {
+    if (!timeString) return null;
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return { hours, minutes };
+}
+
+// Update navigation buttons to handle timeline views
+prevMonthBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    } else {
+        timelineStartDate.setDate(timelineStartDate.getDate() - (currentView === 'week' ? 7 : 1));
+        renderTimelineView(currentView);
+    }
+});
+
+nextMonthBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    } else {
+        timelineStartDate.setDate(timelineStartDate.getDate() + (currentView === 'week' ? 7 : 1));
+        renderTimelineView(currentView);
+    }
+});
+
 
     // View switching
     viewButtons.forEach(button => {
@@ -843,42 +999,54 @@
 }
     // Save task to the database
     async function saveTask() {
-        const taskId = taskForm.getAttribute('data-task-id');
-        const newTask = {
-            id: taskId || null,
-            title: document.getElementById('taskTitle').value,
-            description: document.getElementById('taskDescription').value,
-            task_date: taskDateInput.value,
-            start_time: document.getElementById('startTime').value || null,
-            end_time: document.getElementById('endTime').value || null,
-            priority: document.getElementById('taskPriority').value
-        };
+    const taskId = taskForm.getAttribute('data-task-id');
+    const newTask = {
+        id: taskId || null,
+        title: document.getElementById('taskTitle').value,
+        description: document.getElementById('taskDescription').value,
+        task_date: taskDateInput.value,
+        start_time: document.getElementById('startTime').value || null,
+        end_time: document.getElementById('endTime').value || null,
+        priority: document.getElementById('taskPriority').value
+    };
 
-        try {
-            const response = await fetch('api.php?action=save_task', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTask)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            
-            const result = await response.json();
-            if (result.status === 'success') {
-                closeModal();
-                renderCalendar();
-            } else {
-                console.error('Error saving task:', result.message);
-                alert('Error saving task: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error saving task:', error);
-            alert('Error saving task: ' + error.message);
-        }
+    // Get category prediction
+    try {
+        const predictionResponse = await fetch('http://localhost:5000/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task: newTask.description })
+        });
+        
+        const predictionData = await predictionResponse.json();
+        newTask.category = predictionData.category;
+    } catch (error) {
+        console.error('Prediction error:', error);
+        newTask.category = 'Uncategorized';
     }
 
+    try {
+        const response = await fetch('api.php?action=save_task', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newTask)
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        
+        const result = await response.json();
+        if (result.status === 'success') {
+            closeModal();
+            renderCalendar();
+        } else {
+            console.error('Error saving task:', result.message);
+            alert('Error saving task: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error saving task:', error);
+        alert('Error saving task: ' + error.message);
+    }
+}
     // Delete a task
     async function deleteTask(taskId) {
         if (!confirm('Are you sure you want to delete this task?')) {
@@ -1003,10 +1171,145 @@
     }
 
     // Function to render timeline view (week or day)
+    document.addEventListener('DOMContentLoaded', function () {
+    // ... (previous existing code remains the same)
+
+    // Function to render timeline view (week or day)
     function renderTimelineView(view) {
-        // This would be implemented for week/day views
-        console.log(`Rendering ${view} view`);
+        const timelineHours = document.querySelector('.timeline-hours');
+        const timelineContent = document.querySelector('.timeline-content');
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // Clear existing content
+        timelineHours.innerHTML = '';
+        // Remove existing day columns
+        const existingDayColumns = timelineContent.querySelectorAll('.day-column');
+        existingDayColumns.forEach(column => column.remove());
+
+        // Generate hours
+        for (let i = 0; i < 24; i++) {
+            const hourSlot = document.createElement('div');
+            hourSlot.className = 'hour-slot';
+            hourSlot.textContent = `${i.toString().padStart(2, '0')}:00`;
+            timelineHours.appendChild(hourSlot);
+        }
+
+        // Determine the date range based on the view
+        const startDate = new Date(currentDate);
+        const endDate = new Date(currentDate);
+
+        if (view === 'week') {
+            // Set to the start of the current week (Sunday)
+            startDate.setDate(currentDate.getDate() - currentDate.getDay());
+            endDate.setDate(startDate.getDate() + 6);
+        } else if (view === 'day') {
+            // Only show the current day
+            endDate.setDate(startDate.getDate());
+        }
+
+        // Fetch tasks for the specific date range
+        fetchTasksForTimelineView(startDate, endDate)
+            .then(tasks => {
+                // Create day columns
+                for (let i = 0; i < (view === 'day' ? 1 : 7); i++) {
+                    const dayColumn = document.createElement('div');
+                    dayColumn.className = 'day-column';
+
+                    // Calculate the current day in the range
+                    const currentDay = new Date(startDate);
+                    currentDay.setDate(startDate.getDate() + i);
+
+                    // Create time slots for the day
+                    for (let hour = 0; hour < 24; hour++) {
+                        const timeSlot = document.createElement('div');
+                        timeSlot.className = 'time-slot';
+                        timeSlot.setAttribute('data-date', currentDay.toISOString().split('T')[0]);
+                        timeSlot.setAttribute('data-hour', hour);
+
+                        // Filter tasks for this specific day and hour
+                        const dayTasks = tasks.filter(task => {
+                            const taskDate = new Date(task.task_date);
+                            return taskDate.toDateString() === currentDay.toDateString();
+                        });
+
+                        // Render tasks for this time slot
+                        dayTasks.forEach(task => {
+                            if (task.start_time) {
+                                const [taskHour] = task.start_time.split(':');
+                                if (parseInt(taskHour) === hour) {
+                                    const taskElement = document.createElement('div');
+                                    taskElement.className = 'timeline-task';
+                                    taskElement.textContent = task.title;
+
+                                    // Apply priority-based styling
+                                    if (task.priority === 'high') {
+                                        taskElement.style.backgroundColor = 'rgba(244, 67, 54, 0.2)';
+                                        taskElement.style.borderLeftColor = '#f44336';
+                                    } else if (task.priority === 'medium') {
+                                        taskElement.style.backgroundColor = 'rgba(67, 97, 238, 0.2)';
+                                        taskElement.style.borderLeftColor = '#4361ee';
+                                    } else if (task.priority === 'low') {
+                                        taskElement.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+                                        taskElement.style.borderLeftColor = '#4caf50';
+                                    }
+
+                                    taskElement.addEventListener('click', () => {
+                                        openEditTaskModal(task);
+                                    });
+
+                                    timeSlot.appendChild(taskElement);
+                                }
+                            }
+                        });
+
+                        dayColumn.appendChild(timeSlot);
+                    }
+
+                    timelineContent.appendChild(dayColumn);
+                }
+            });
     }
+
+    // Fetch tasks for timeline view with date range
+    async function fetchTasksForTimelineView(startDate, endDate) {
+        try {
+            const response = await fetch(`api.php?action=get_tasks_by_date_range&start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}`);
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Received non-JSON response');
+            }
+            
+            const tasks = await response.json();
+            return tasks;
+        } catch (error) {
+            console.error('Fetch error:', error);
+            return [];
+        }
+    }
+
+    // Modify the existing view switching event listener
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const view = button.getAttribute('data-view');
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Switch views
+            const calendarView = document.querySelector('.calendar-view');
+            const timelineView = document.querySelector('.timeline-view');
+
+            if (view === 'month') {
+                calendarView.style.display = 'block';
+                timelineView.style.display = 'none';
+            } else {
+                calendarView.style.display = 'none';
+                timelineView.style.display = 'flex';
+                renderTimelineView(view);
+            }
+        });
+    });
+});
 });
     </script>
 </body>
