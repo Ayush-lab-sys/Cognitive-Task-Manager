@@ -1,19 +1,18 @@
 // serviceWorker.js
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing.');
-
   event.waitUntil(
     caches.open('task-manager-v1').then((cache) => {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/style.css',
-        '/app.js',
-        '/manifest.json', 
-        '/dashboard.html',
-        '/img/image1.png',
-        '/img/image2.png',
-        '/img/image3.png'
+        './',
+        './index.html',
+        './style.css',
+        './app.js',
+        './manifest.json',
+        './dashboard.html',
+        './img/image1.png',
+        './img/image2.png',
+        './img/image3.png',
+        './img/logo.png'
       ]);
     })
   );

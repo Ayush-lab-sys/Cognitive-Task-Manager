@@ -667,36 +667,8 @@ let timelineStartDate = new Date();
     // Initialize the calendar
     renderCalendar();
 
-    // Event listeners for navigation
-    prevMonthBtn.addEventListener('click', () => {
-    if (currentView === 'month') {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-    } else {
-        timelineStartDate.setDate(timelineStartDate.getDate() - (currentView === 'week' ? 7 : 1));
-        renderTimelineView(currentView);
-    }
-});
 
-nextMonthBtn.addEventListener('click', () => {
-    if (currentView === 'month') {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    } else {
-        timelineStartDate.setDate(timelineStartDate.getDate() + (currentView === 'week' ? 7 : 1));
-        renderTimelineView(currentView);
-    }
-});
 
-todayBtn.addEventListener('click', () => {
-    if (currentView === 'month') {
-        currentDate = new Date();
-        renderCalendar();
-    } else {
-        timelineStartDate = new Date();
-        renderTimelineView(currentView);
-    }
-});
 
     // Update the renderTimelineView function
     async function renderTimelineView(view) {
@@ -815,9 +787,18 @@ function parseTime(timeString) {
 }
 
 // Update navigation buttons to handle timeline views
+// Replace the existing event listeners for navigation buttons with these:
+// Replace the existing event listeners for navigation buttons with these:
 prevMonthBtn.addEventListener('click', () => {
     if (currentView === 'month') {
-        currentDate.setMonth(currentDate.getMonth() - 1);
+        // Create a new date object based on the current one to avoid reference issues
+        const newDate = new Date(currentDate);
+        // Set the date to the first day of the current month
+        newDate.setDate(1);
+        // Move to the previous month
+        newDate.setMonth(newDate.getMonth() - 1);
+        // Update currentDate
+        currentDate = newDate;
         renderCalendar();
     } else {
         timelineStartDate.setDate(timelineStartDate.getDate() - (currentView === 'week' ? 7 : 1));
@@ -827,10 +808,27 @@ prevMonthBtn.addEventListener('click', () => {
 
 nextMonthBtn.addEventListener('click', () => {
     if (currentView === 'month') {
-        currentDate.setMonth(currentDate.getMonth() + 1);
+        // Create a new date object based on the current one
+        const newDate = new Date(currentDate);
+        // Set the date to the first day of the current month
+        newDate.setDate(1);
+        // Move to the next month
+        newDate.setMonth(newDate.getMonth() + 1);
+        // Update currentDate
+        currentDate = newDate;
         renderCalendar();
     } else {
         timelineStartDate.setDate(timelineStartDate.getDate() + (currentView === 'week' ? 7 : 1));
+        renderTimelineView(currentView);
+    }
+});
+
+todayBtn.addEventListener('click', () => {
+    if (currentView === 'month') {
+        currentDate = new Date();
+        renderCalendar();
+    } else {
+        timelineStartDate = new Date();
         renderTimelineView(currentView);
     }
 });
@@ -999,54 +997,42 @@ nextMonthBtn.addEventListener('click', () => {
 }
     // Save task to the database
     async function saveTask() {
-    const taskId = taskForm.getAttribute('data-task-id');
-    const newTask = {
-        id: taskId || null,
-        title: document.getElementById('taskTitle').value,
-        description: document.getElementById('taskDescription').value,
-        task_date: taskDateInput.value,
-        start_time: document.getElementById('startTime').value || null,
-        end_time: document.getElementById('endTime').value || null,
-        priority: document.getElementById('taskPriority').value
-    };
+        const taskId = taskForm.getAttribute('data-task-id');
+        const newTask = {
+            id: taskId || null,
+            title: document.getElementById('taskTitle').value,
+            description: document.getElementById('taskDescription').value,
+            task_date: taskDateInput.value,
+            start_time: document.getElementById('startTime').value || null,
+            end_time: document.getElementById('endTime').value || null,
+            priority: document.getElementById('taskPriority').value
+        };
 
-    // Get category prediction
-    try {
-        const predictionResponse = await fetch('http://localhost:5000/predict', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ task: newTask.description })
-        });
-        
-        const predictionData = await predictionResponse.json();
-        newTask.category = predictionData.category;
-    } catch (error) {
-        console.error('Prediction error:', error);
-        newTask.category = 'Uncategorized';
-    }
-
-    try {
-        const response = await fetch('api.php?action=save_task', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newTask)
-        });
-        
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        
-        const result = await response.json();
-        if (result.status === 'success') {
-            closeModal();
-            renderCalendar();
-        } else {
-            console.error('Error saving task:', result.message);
-            alert('Error saving task: ' + result.message);
+        try {
+            const response = await fetch('api.php?action=save_task', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            if (result.status === 'success') {
+                closeModal();
+                renderCalendar();
+            } else {
+                console.error('Error saving task:', result.message);
+                alert('Error saving task: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error saving task:', error);
+            alert('Error saving task: ' + error.message);
         }
-    } catch (error) {
-        console.error('Error saving task:', error);
-        alert('Error saving task: ' + error.message);
     }
-}
+
     // Delete a task
     async function deleteTask(taskId) {
         if (!confirm('Are you sure you want to delete this task?')) {

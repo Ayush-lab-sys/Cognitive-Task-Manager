@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Task Manager</title>
-    <link rel="manifest" href="/manifest.json">
+    <title>Advanced Task Manager</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <style>
-        /* All previous CSS styles from the first part remain exactly the same */
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -26,76 +27,44 @@
             margin: 0 auto;
         }
 
+        /* Header Styles */
         .header {
             text-align: center;
             margin-bottom: 40px;
-            padding: 20px;
+            padding: 30px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
-            color: #4ecca3;
+            background: linear-gradient(45deg, #4ecca3, #45b08c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .notification-settings {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            width: 40px;
-            height: 20px;
-            appearance: none;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .toggle-switch input[type="checkbox"]:checked {
-            background: #4ecca3;
-        }
-
-        .toggle-switch input[type="checkbox"]::before {
-            content: '';
-            width: 16px;
-            height: 16px;
-            background: white;
-            position: absolute;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-
-        .toggle-switch input[type="checkbox"]:checked::before {
-            left: 22px;
-        }
-
+        /* Task Form Styles */
         .task-form {
             background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
             margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
@@ -103,14 +72,16 @@
             margin-bottom: 8px;
             color: #4ecca3;
             font-size: 1.1em;
+            font-weight: 600;
         }
 
         .form-group input,
+        .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             color: #fff;
             font-size: 1em;
@@ -118,44 +89,49 @@
         }
 
         .form-group input:focus,
+        .form-group select:focus,
         .form-group textarea:focus {
+            border-color: #4ecca3;
+            background: rgba(255, 255, 255, 0.1);
             outline: none;
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
         }
 
-        button {
+        button[type="submit"] {
             background: #4ecca3;
-            color: #1a1a2e;
+            color: #16213e;
             border: none;
-            padding: 12px 25px;
+            padding: 12px 30px;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 1.1em;
-            font-weight: bold;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
+            display: block;
+            width: 100%;
         }
 
-        button:hover {
-            background: #45b393;
+        button[type="submit"]:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 204, 163, 0.3);
         }
 
+        /* Task Cards */
         .tasks-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
         }
 
         .task-card {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
             position: relative;
             opacity: 0;
             transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .task-card.show {
@@ -165,429 +141,439 @@
 
         .task-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .task-card h3 {
-            color: #4ecca3;
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .category-tag {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .task-title {
+            font-size: 1.4em;
             margin-bottom: 10px;
-            word-break: break-word;
+            color: #4ecca3;
         }
 
-        .countdown {
+        .task-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .due-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ff6b6b;
             font-size: 0.9em;
-            margin-top: 10px;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
         }
 
-        .urgent {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid #ff6b6b;
-            animation: pulse 2s infinite;
-        }
-
-        .warning {
-            background: rgba(255, 193, 7, 0.2);
-            border: 1px solid #ffc107;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .due-date i {
+            font-size: 1.2em;
         }
 
         .delete-btn {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            bottom: 20px;
+            right: 20px;
             background: #ff6b6b;
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            gap: 6px;
         }
 
         .delete-btn:hover {
             background: #ff5252;
-            transform: rotate(90deg);
+            transform: scale(1.05);
         }
 
+        /* Loading Indicator */
+        #loading {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            background: #4ecca3;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4ecca3;
+            border-radius: 4px;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             
-            .task-form {
-                padding: 20px;
-            }
-            
-            .tasks-container {
+            .form-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        .persistent-install-btn {
+    background: #4ecca3;
+    color: #16213e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.persistent-install-btn {
+    display: block !important; /* Force visibility for testing */
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+    transform: none !important;
+}
+.persistent-install-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(78, 204, 163, 0.3);
+}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <button id="installPwa" style="display: none;">Install App</button>
-            <button id="enableNotifications">Enable Notifications</button>
-            <h1>Complete Task Manager</h1>
-            <p>Smart notifications and task tracking</p>
-       
+            <h1>Advanced Task Manager</h1>
+            <p>Smart Task Management with AI Categorization</p>
+            <button id="installButton" class="persistent-install-btn">
+                <i class="fas fa-download"></i> Install App
+            </button>
         </div>
 
-        <div class="notification-settings">
-            <h3 style="margin-bottom: 15px; color: #4ecca3;">Notification Settings</h3>
-            <div class="toggle-switch">
-                <input type="checkbox" id="notificationToggle">
-                <label for="notificationToggle">Enable Desktop Notifications</label>
-            </div>
-            <div class="toggle-switch">
-                <input type="checkbox" id="soundToggle">
-                <label for="soundToggle">Enable Sound Alerts</label>
-            </div>
-            <p style="font-size: 0.9em; color: #aaa;">You'll receive notifications: 24 hours, 12 hours, 6 hours, and 1 hour before deadlines</p>
-        </div>
-
+        <!-- Task Input Form -->
         <form class="task-form" id="taskForm">
-            <div class="form-group">
-                <label for="title">Task Title</label>
-                <input type="text" id="title" required placeholder="Enter task title">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="title">Task Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deadline">Deadline</label>
+                    <input type="datetime-local" id="deadline" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" rows="3" placeholder="Enter task description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="deadline">Deadline</label>
-                <input type="datetime-local" id="deadline" required>
+                <textarea id="description" rows="4"></textarea>
             </div>
             <button type="submit">Add Task</button>
         </form>
 
+        <!-- Tasks Container -->
         <div class="tasks-container" id="tasksContainer"></div>
+        
+        <!-- Loading Indicator -->
+        <div id="loading">Saving Task...</div>
     </div>
 
-   
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAjlo6e2I1zGwtIk2SEgf-PeOs2RSf-exg",
-            authDomain: "mindful-72943.firebaseapp.com",
-            databaseURL: "https://mindful-72943-default-rtdb.firebaseio.com",
-            projectId: "mindful-72943",
-            storageBucket: "mindful-72943.appspot.com",
-            messagingSenderId: "618540501527",
-            appId: "1:618540501527:web:affa151d309feaa3ee6a52"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Function to Save Task in Firestore
-        async function saveTaskToFirebase(title, description, deadline) {
-            try {
-                const docRef = await addDoc(collection(db, "tasks"), {
-                    title: title,
-                    description: description,
-                    deadline: deadline,
-                    createdAt: new Date().toISOString(),
-                });
-
-                console.log("Task saved with ID:", docRef.id);
-                loadTasksFromFirebase(); // Reload tasks after saving
-            } catch (error) {
-                console.error("Error saving task:", error);
-            }
-        }
-
-        // Load Tasks from Firestore
-        async function loadTasksFromFirebase() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "tasks"));
-                const tasksContainer = document.getElementById("tasksContainer");
-                tasksContainer.innerHTML = "";
-
-                querySnapshot.forEach((doc) => {
-                    const task = doc.data();
-                    const taskHTML = `
-                        <div class="task-card">
-                            <h3>${task.title}</h3>
-                            <p>${task.description}</p>
-                            <p class="deadline">Deadline: ${new Date(task.deadline).toLocaleString()}</p>
-                        </div>
-                    `;
-                    tasksContainer.innerHTML += taskHTML;
-                });
-
-                console.log("Tasks loaded successfully");
-            } catch (error) {
-                console.error("Error loading tasks:", error);
-            }
-        }
-
-        // Handle Task Submission
-        document.getElementById("taskForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const title = document.getElementById("title").value;
-            const description = document.getElementById("description").value;
-            const deadline = document.getElementById("deadline").value;
-
-            await saveTaskToFirebase(title, description, deadline);
-            document.getElementById("taskForm").reset();
-        });
-
-        // Load tasks when the page loads
-        loadTasksFromFirebase();
-    </script>
-
-    <script>
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', async () => {
-                try {
-                    const registration = await navigator.serviceWorker.register('/serviceWorker.js');
-                    console.log('Service Worker registered:', registration);
-                    navigator.serviceWorker.ready.then((reg) => {
-                        console.log("Service Worker Ready:", reg);
-                    });
-                } catch (error) {
-                    console.error('Service Worker registration failed:', error);
-                }
-            });
-        }
-
-        // PWA Installation Handling
+    <script>  // PWA Installation Logic
         let deferredPrompt;
+const installButton = document.getElementById('installButton');
 
-        window.addEventListener('beforeinstallprompt', (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
+// Always show button unless in standalone mode
+const checkDisplayMode = () => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    installButton.style.display = isStandalone ? 'none' : 'block';
+};
 
-            const installButton = document.getElementById('installPwa');
-            if (installButton) {
-                installButton.style.display = 'block';
+// Initial check
+checkDisplayMode();
+
+// Listen for display mode changes
+window.matchMedia('(display-mode: standalone)').addListener(checkDisplayMode);
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installButton.style.display = 'block';
+});
+
+installButton.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        try {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('Installation outcome:', outcome);
+        } catch (error) {
+            console.log('Installation failed:', error);
+        }
+    } else {
+        // If already installed, handle app opening
+        if (window.navigator.getInstalledRelatedApps) {
+            const apps = await window.navigator.getInstalledRelatedApps();
+            if (apps.length > 0) {
+                alert('App is already installed! Opening...');
+                window.location.href = window.matchMedia('(display-mode: standalone)').matches 
+                    ? window.location.href 
+                    : 'intent://your-app-url#Intent;scheme=https;package=com.yourapp.package;end';
             }
-        });
+        }
+    }
+});
 
-        document.getElementById('installPwa')?.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const result = await deferredPrompt.userChoice;
-                console.log(`User ${result.outcome === 'accepted' ? 'accepted' : 'dismissed'} the install prompt`);
-                deferredPrompt = null;
-            }
-        });
+// Optional: Track installation state
+window.addEventListener('appinstalled', () => {
+    console.log('PWA was installed');
+    installButton.style.display = 'none';
+});
 
-        window.addEventListener('beforeinstallprompt', (event) => {
-            console.log("✅ beforeinstallprompt event fired");  // Debugging log
-            event.preventDefault();
-            deferredPrompt = event;
+        if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+                    .then(registration => {
+                console.log('SW registered:', registration);
+            })
+            .catch(error => {
+                console.log('SW registration failed:', error);
+            });
+    });
+}
 
-            const installButton = document.getElementById('installPwa');
-            if (installButton) {
-                installButton.style.display = 'block';
-            } else {
-                console.error("❌ Install button not found in the DOM!");
-            }
-        });
+window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('Install event triggered!');
+    e.preventDefault();
+    deferredPrompt = e;
+    installButton.style.display = 'block';
+});
 
+installButton.addEventListener('click', async () => {
+    console.log('Install button clicked');
+    if (!deferredPrompt) return;
+    const result = await deferredPrompt.prompt();
+    console.log('Install prompt result:', result.outcome);
+});
         class TaskManager {
             constructor() {
-                this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                this.tasks = [];
                 this.taskForm = document.getElementById('taskForm');
                 this.tasksContainer = document.getElementById('tasksContainer');
-                this.notificationToggle = document.getElementById('notificationToggle');
-                this.soundToggle = document.getElementById('soundToggle');
-                
-                // Create notification sound
-                this.notificationSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYZUh8XJAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAAQAAAaQAAAAhAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sQxAaD0AAAf4AAAAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
                 
                 this.init();
-                this.setupNotifications();
-                this.startNotificationCheck();
+                this.loadTasks();
             }
 
-            init() {
-                // Load saved notification preferences
-                this.notificationToggle.checked = localStorage.getItem('notifications') === 'true';
-                this.soundToggle.checked = localStorage.getItem('sound') === 'true';
-
-                // Event listeners
+            async init() {
                 this.taskForm.addEventListener('submit', (e) => this.handleSubmit(e));
-                this.notificationToggle.addEventListener('change', () => {
-                    localStorage.setItem('notifications', this.notificationToggle.checked);
-                });
-                this.soundToggle.addEventListener('change', () => {
-                    localStorage.setItem('sound', this.soundToggle.checked);
-                });
-
-                // Initial render
-                this.renderTasks();
             }
 
-            async setupNotifications() {
-                if ('Notification' in window) {
-                    const permission = await Notification.requestPermission();
-                    this.notificationToggle.checked = permission === 'granted';
-                } else {
-                    this.notificationToggle.disabled = true;
-                }
-            }
-
-            startNotificationCheck() {
-                // Check every minute
-                setInterval(() => this.checkDeadlines(), 60000);
-                this.checkDeadlines(); // Initial check
-            }
-
-            playNotificationSound() {
-                if (this.soundToggle.checked) {
-                    this.notificationSound.play().catch(error => {
-                        console.log('Audio playback failed:', error);
-                    });
-                }
-            }
-
-            handleSubmit(e) {
+            async handleSubmit(e) {
                 e.preventDefault();
+                this.showLoading(true);
                 
-                const title = document.getElementById('title').value;
-                const description = document.getElementById('description').value;
-                const deadline = document.getElementById('deadline').value;
+                try {
+                    const formData = {
+                        title: document.getElementById('title').value.trim(),
+                        description: document.getElementById('description').value.trim(),
+                        deadline: document.getElementById('deadline').value,
+                        priority: document.getElementById('priority').value
+                    };
 
-                const task = {
-                    id: Date.now(),
-                    title,
-                    description,
-                    deadline,
-                    createdAt: new Date().toISOString(),
-                    notified: {
-                        day: false,
-                        halfDay: false,
-                        sixHours: false,
-                        oneHour: false
-                    }
-                };
+                    if (!formData.title) throw new Error('Title is required');
+                    
+                    const category = await this.predictCategory(formData.description);
+                    const [task_date, start_time] = formData.deadline.split('T');
 
-                this.tasks.push(task);
-                this.saveTasks();
-                this.renderTasks();
-                this.taskForm.reset();
+                    const taskData = {
+                        title: formData.title,
+                        description: formData.description,
+                        task_date: task_date || new Date().toISOString().split('T')[0],
+                        start_time: start_time || '00:00',
+                        priority: formData.priority,
+                        category: category || 'uncategorized'
+                    };
 
-                // Show success notification
-                if (this.notificationToggle.checked) {
-                    new Notification('Task Added', {
-                        body: `"${title}" has been added to your tasks.`,
-                        icon: '/favicon.ico'
-                    });
-                    this.playNotificationSound();
+                    const savedTask = await this.saveTask(taskData);
+                    this.tasks.unshift(savedTask);
+                    this.renderTasks();
+                    this.taskForm.reset();
+
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                } finally {
+                    this.showLoading(false);
                 }
             }
 
-            checkDeadlines() {
-                const now = new Date();
-                this.tasks.forEach(task => {
-                    const deadline = new Date(task.deadline);
-                    const hoursLeft = (deadline - now) / (1000 * 60 * 60);
+            async predictCategory(description) {
+                try {
+                    if (!description) return 'uncategorized';
+                    
+                    const response = await fetch('http://localhost:5000/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ task: description })
+                    });
+                    
+                    if (!response.ok) throw new Error('Prediction failed');
+                    const data = await response.json();
+                    return data.category?.toLowerCase() || 'uncategorized';
+                } catch {
+                    return 'uncategorized';
+                }
+            }
 
-                    if (hoursLeft > 0) {
-                        // Check notification thresholds
-                        if (this.notificationToggle.checked) {
-                            if (hoursLeft <= 1 && !task.notified.oneHour) {
-                                this.sendNotification(task, '1 hour');
-                                task.notified.oneHour = true;
-                            } else if (hoursLeft <= 6 && !task.notified.sixHours) {
-                                this.sendNotification(task, '6 hours');
-                                task.notified.sixHours = true;
-                            } else if (hoursLeft <= 12 && !task.notified.halfDay) {
-                                this.sendNotification(task, '12 hours');
-                                task.notified.halfDay = true;
-                            } else if (hoursLeft <= 24 && !task.notified.day) {
-                                this.sendNotification(task, '24 hours');
-                                task.notified.day = true;
-                            }
-                        }
-                    }
+            async saveTask(taskData) {
+                const response = await fetch('api.php?action=save_task', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(taskData)
                 });
                 
-                this.saveTasks();
-                this.renderTasks();
-            }
-
-            sendNotification(task, timeLeft) {
-                if (Notification.permission === 'granted') {
-                    new Notification(`Task Due in ${timeLeft}!`, {
-                        body: `"${task.title}" needs to be completed within ${timeLeft}.`,
-                        icon: '/favicon.ico'
-                    });
-                    this.playNotificationSound();
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to save task');
                 }
+                return await response.json();
             }
 
-            deleteTask(id) {
-                const taskCard = document.querySelector(`[data-id="${id}"]`);
-                taskCard.style.transform = 'translateX(100px)';
-                taskCard.style.opacity = '0';
-
-                setTimeout(() => {
-                    this.tasks = this.tasks.filter(task => task.id !== id);
-                    this.saveTasks();
+            async loadTasks() {
+                try {
+                    const response = await fetch('api.php?action=get_tasks');
+                    this.tasks = await response.json();
                     this.renderTasks();
-                }, 300);
-            }
-
-            saveTasks() {
-                    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-            }
-
-            formatDate(dateString) {
-                return new Date(dateString).toLocaleString();
+                } catch (error) {
+                    console.error('Loading error:', error);
+                }
             }
 
             renderTasks() {
                 this.tasksContainer.innerHTML = this.tasks
-                    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+                    .sort((a, b) => new Date(b.task_date) - new Date(a.task_date))
                     .map(task => `
-                        <div class="task-card" data-id="${task.id}" style="opacity: 0; transform: translateY(20px);">
-                            <h3>${task.title}</h3>
-                            <p>${task.description}</p>
-                            <p class="deadline">Deadline: ${this.formatDate(task.deadline)}</p>
-                            <button class="delete-btn" onclick="taskManager.deleteTask(${task.id})">×</button>
+                        <div class="task-card" data-id="${task.id}">
+                            <div class="task-header">
+                                <div class="category-tag" style="background: ${this.getCategoryColor(task.category)}">
+                                    ${task.category}
+                                </div>
+                                <div class="priority-tag" style="background: ${this.getPriorityColor(task.priority)}">
+                                    ${task.priority}
+                                </div>
+                            </div>
+                            <h3 class="task-title">${task.title}</h3>
+                            ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+                            <div class="due-date">
+                                <i class="fas fa-clock"></i>
+                                ${new Date(task.task_date + 'T' + task.start_time).toLocaleString()}
+                            </div>
+                            <button class="delete-btn" onclick="taskManager.deleteTask('${task.id}')">
+                                Delete
+                            </button>
                         </div>
-                    `)
-                    .join('');
+                    `).join('');
 
-                // Animate cards on load
+                // Add animation to cards
                 setTimeout(() => {
                     document.querySelectorAll('.task-card').forEach(card => {
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
                     });
-                }, 100);
+                }, 50);
+            }
+
+            async deleteTask(taskId) {
+                if (!confirm('Delete this task permanently?')) return;
+                
+                try {
+                    await fetch(`api.php?action=delete_task&id=${taskId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    this.tasks = this.tasks.filter(task => task.id != taskId);
+                    this.renderTasks();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+
+            getCategoryColor(category) {
+                const colors = {
+                    'work': '#4361ee',
+                    'personal': '#3f37c9',
+                    'study': '#4895ef',
+                    'shopping': '#2ecc71',
+                    'uncategorized': '#6c757d'
+                };
+                return colors[category?.toLowerCase()] || colors.uncategorized;
+            }
+
+            getPriorityColor(priority) {
+                const colors = {
+                    'low': '#4ecca3',
+                    'medium': '#f1c40f',
+                    'high': '#e74c3c'
+                };
+                return colors[priority?.toLowerCase()] || '#6c757d';
+            }
+
+            showLoading(show) {
+                document.getElementById('loading').style.display = show ? 'block' : 'none';
             }
         }
 
-        const taskManager = new TaskManager();
+        window.addEventListener('DOMContentLoaded', () => {
+            window.taskManager = new TaskManager();
+        });
     </script>
 </body>
-</html> 
+</html>
