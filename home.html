@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Task Manager</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Carousel Section */
+        .carousel {
+            position: relative;
+            width: 90%; /* Reduced width for better containment */
+            max-width: 1200px; /* Maximum width for larger screens */
+            height: 500px; /* Increased height */
+            overflow: hidden;
+            margin: 20px auto; /* Centered with auto margins */
+            border-radius: 20px; /* Increased border radius */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+            background-color: white;
+            padding: 20px; /* Added padding around carousel */
+        }
+
+        .carousel-images {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+            width: 100%;
+        }
+
+        .carousel-item {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            flex-shrink: 0;
+            padding: 10px; /* Added padding around items */
+        }
+
+        .carousel-item a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Changed to contain to prevent cropping */
+            display: block;
+            border: 12px solid #fff; /* Increased border width */
+            border-radius: 16px; /* Increased border radius */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            background-color: #f8f9fa; /* Light background for images */
+        }
+
+        .carousel-item:hover img {
+            transform: scale(1.02); /* Subtle zoom on hover */
+        }
+
+        .quote {
+            position: absolute;
+            bottom: 40px; /* Increased distance from bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            color: white;
+            font-size: 24px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 80%;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Navigation Buttons */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            width: 60px; /* Increased size */
+            height: 60px; /* Increased size */
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 28px; /* Increased font size */
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .left {
+            left: 20px; /* Increased distance from edge */
+        }
+
+        .right {
+            right: 20px; /* Increased distance from edge */
+        }
+
+        /* Rest of your existing styles remain the same */
+        /* ... (Keep all other styles as they were) ... */
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 768px) {
+            .carousel {
+                width: 95%;
+                height: 400px;
+                padding: 10px;
+            }
+
+            .nav-button {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .quote {
+                font-size: 18px;
+                padding: 10px 20px;
+                bottom: 30px;
+            }
+
+            .carousel-item img {
+                border-width: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel {
+                height: 300px;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .left {
+            left: 10px;
+        }
+
+        .right {
+            right: 10px;
+        }
+
+        /* Task Overview Section */
+        .task-overview {
+            padding: 20px;
+        }
+
+        .task-status {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .task-card {
+            width: 30%;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .progress-bar {
+            background-color: #f0f0f0;
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Calendar & Upcoming Tasks */
+        .calendar {
+            padding: 20px;
+        }
+
+        .calendar-widget {
+            margin-bottom: 20px;
+        }
+
+        .calendar-box {
+            background-color: #fff;
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-tasks {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .upcoming-tasks li {
+            background-color: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .upcoming-tasks li:hover {
+            transform: translateX(5px);
+        }
+
+        /* Productivity Analytics */
+        .analytics {
+            padding: 20px;
+        }
+
+        .analytics-box {
+            background-color: #fff;
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .graph-placeholder {
+            background-color: #f0f0f0;
+            width: 80%;
+            height: 80%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
+            border-radius: 8px;
+        }
+
+        /* Section Headers */
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* Add Responsiveness */
+        @media (max-width: 768px) {
+            .task-status {
+                flex-direction: column;
+            }
+
+            .task-card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .carousel {
+                height: 250px;
+            }
+
+            .carousel-item img {
+                object-fit: cover;
+                height: 250px;
+            }
+
+            .quote {
+                font-size: 18px;
+                bottom: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section: Carousel -->
+    <section class="carousel">
+        <div class="carousel-images">
+            <div class="carousel-item">
+                <a href="dashboard.html">
+                    <img src="img/text.png" alt="Image 1">
+                 
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="voiceTask.html">
+                    <img src="img/voice.png" alt="Image 2">
+                    <p class="quote">"Use Voice to Add Task"</p>
+                </a>
+            </div>
+        
+        </div>
+        <button class="nav-button left" onclick="prevImage()">&#10094;</button>
+        <button class="nav-button right" onclick="nextImage()">&#10095;</button>
+    </section>
+
+    <!-- Task Overview Section -->
+    <section class="task-overview">
+        <h2>Task Overview</h2>
+        <div class="task-status">
+            <div class="task-card">
+                <h3>Pending Tasks</h3>
+                <div class="progress-bar">
+                    <div class="progress pending" style="width: 60%; background-color: #f39c12;"></div>
+                </div>
+            </div>
+            <div class="task-card">
+                <h3>In-Progress Tasks</h3>
+                <div class="progress-bar">
+                    <div class="progress in-progress" style="width: 40%; background-color: #3498db;"></div>
+                </div>
+            </div>
+            <div class="task-card">
+                <h3>Completed Tasks</h3>
+                <div class="progress-bar">
+                    <div class="progress completed" style="width: 80%; background-color: #2ecc71;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar & Upcoming Tasks -->
+    <section class="calendar">
+        <h2>Upcoming Tasks</h2>
+        <div class="calendar-widget">
+            <div class="calendar-box">Calendar here</div>
+        </div>
+        <ul class="upcoming-tasks">
+            <li>Task 1 - Due: 2025-02-12</li>
+            <li>Task 2 - Due: 2025-02-14</li>
+            <li>Task 3 - Due: 2025-02-16</li>
+        </ul>
+    </section>
+
+    <!-- Productivity Analytics -->
+    <section class="analytics">
+        <h2>Productivity Analytics</h2>
+        <div class="analytics-box">
+            <div class="graph-placeholder">Graph Placeholder</div>
+        </div>
+    </section>
+
+    <script>
+        let index = 0;
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const totalItems = carouselItems.length;
+        let interval;
+
+        function startCarousel() {
+            interval = setInterval(() => {
+                moveToNext();
+            }, 3000);
+        }
+
+        function stopCarousel() {
+            clearInterval(interval);
+        }
+
+        function moveToNext() {
+            index = (index + 1) % totalItems;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const newTransform = -index * 100;
+            const carouselImages = document.querySelector('.carousel-images');
+            
+            if (index === 0) {
+                // When moving from last to first image
+                carouselImages.style.transition = 'none';
+                carouselImages.style.transform = `translateX(${newTransform}%)`;
+                // Force reflow
+                carouselImages.offsetHeight;
+                carouselImages.style.transition = 'transform 0.5s ease-in-out';
+            } else {
+                carouselImages.style.transform = `translateX(${newTransform}%)`;
+            }
+        }
+
+        function nextImage() {
+            stopCarousel();
+            moveToNext();
+            startCarousel();
+        }
+
+        function prevImage() {
+            stopCarousel();
+            index = (index - 1 + totalItems) % totalItems;
+            updateCarousel();
+            startCarousel();
+        }
+
+        // Start the carousel automatically
+        startCarousel();
+    </script>
+</body>
+</html>

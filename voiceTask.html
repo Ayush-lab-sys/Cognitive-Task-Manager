@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Voice Interface Styles */
+        .voice-interface {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        #voiceBtn {
+            background: #4ecca3;
+            color: #16213e;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        #voiceBtn.recording {
+            background: #ff6b6b;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Tasks Grid */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Task Card */
+        .task-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            min-height: 200px;
+        }
+
+        .task-category {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .task-date {
+            color: #ff6b6b;
+            margin-top: 1rem;
+        }
+
+        /* Delete Button Styles */
+        .delete-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Status Messages */
+        .status-message {
+            text-align: center;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status-success {
+            background: #4ecca3;
+            color: #16213e;
+            display: block;
+        }
+
+        .status-error {
+            background: #ff6b6b;
+            color: white;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="voice-interface">
+            <button id="voiceBtn">
+                <i class="fas fa-microphone"></i> Start Recording
+            </button>
+            <div id="status" class="status-message"></div>
+        </div>
+
+        <div class="tasks-grid" id="tasksContainer">
+            <!-- Tasks will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = 'api.php';
+        const ML_ENDPOINT = 'http://localhost:5000/predict';
+
+        // DOM Elements
+        const voiceBtn = document.getElementById('voiceBtn');
+        const tasksContainer = document.getElementById('tasksContainer');
+        const statusDiv = document.getElementById('status');
+
+        // Speech Recognition Setup
+        let recognition;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        // Initialize Application
+        function handleRecognitionError(event) {
+    const errorMessages = {
+        'network': 'Network error: Check internet connection',
+        'not-allowed': 'Microphone access denied by user or browser',
+        'no-speech': 'No speech detected - please try again',
+        'service-not-allowed': 'Browser blocked speech recognition',
+        'language-not-supported': 'English (en-US) required'
+    };
+    
+    const message = errorMessages[event.error] || `Recognition error: ${event.error}`;
+    console.error('Speech Error:', event);
+    showStatus(message, 'error');
+    resetRecordingState();
+}
+
+// Enhanced permission check
+async function checkMicrophonePermission() {
+    try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+        } else {
+            showStatus('Microphone access not supported', 'error');
+            voiceBtn.disabled = true;
+        }
+    } catch (error) {
+        showStatus('Microphone access blocked - enable in browser settings', 'error');
+        voiceBtn.disabled = true;
+    }
+}
+
+// Add browser support check at startup
+function checkBrowserSupport() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+        showStatus('Speech recognition not supported in this browser', 'error');
+        voiceBtn.disabled = true;
+        return false;
+    }
+    return true;
+}
+
+// Initialize Application (updated)
+async function init() {
+    if (!checkBrowserSupport()) return;
+    
+    try {
+        await checkMicrophonePermission();
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.onresult = handleVoiceResult;
+        recognition.onerror = handleRecognitionError;
+
+        voiceBtn.addEventListener('click', toggleRecording);
+        await loadTasks();
+    } catch (error) {
+        showStatus('Initialization failed: ' + error.message, 'error');
+    }
+}
+
+// ML Classification
+async function getTaskCategory(text) {
+            try {
+                const response = await fetch(ML_ENDPOINT, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ task: text })
+                });
+
+                if (!response.ok) throw new Error('ML service unavailable');
+                const data = await response.json();
+                return data.category?.toLowerCase() || 'uncategorized';
+                
+            } catch (error) {
+                console.error('ML Error:', error);
+                return 'uncategorized';
+            }
+        }
+
+
+// Add this after getTaskCategory and before loadTasks
+async function saveTask(task) {
+    try {
+        // Validate required fields
+        if (!task.title || !task.task_date) {
+            throw new Error('Missing required task fields');
+        }
+
+        const response = await fetch(`${API_BASE}?action=save_task`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: task.title,
+                description: task.description,
+                task_date: task.task_date,
+                start_time: task.start_time,
+                priority: task.priority,
+                category: task.category
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to save task');
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Save Task Error:', error);
+        throw new Error('Failed to save task: ' + error.message);
+    }
+}
+
+        // Voice Recording Functions
+        function toggleRecording() {
+            if (!recognition) return;
+            
+            if (!voiceBtn.classList.contains('recording')) {
+                recognition.start();
+                voiceBtn.classList.add('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
+                showStatus('Listening...', 'info');
+            } else {
+                recognition.stop();
+                resetRecordingState();
+            }
+        }
+
+        async function handleVoiceResult(event) {
+            const transcript = event.results[0][0].transcript;
+            showStatus(`Processing: "${transcript}"`, 'info');
+
+            try {
+                const deadline = parseVoiceCommand(transcript);
+                const task = {
+                    title: transcript.substring(0, 50),
+                    description: transcript,
+                    task_date: formatDate(deadline),
+                    start_time: formatTime(deadline),
+                    category: await getTaskCategory(transcript),
+                    priority: 'medium'
+                };
+
+                const savedTask = await saveTask(task);
+                addTaskToUI(savedTask);
+                showStatus('Task saved successfully!', 'success');
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+
+        function getNextDay(dayName) {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const targetDay = days.indexOf(dayName.toLowerCase());
+            const today = new Date().getDay();
+            const offset = targetDay <= today ? 7 - (today - targetDay) : targetDay - today;
+            const nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + offset);
+            return nextDate;
+        }
+
+
+        function parseTimeString(timeString) {
+            const timeMatch = timeString.match(
+                /(\d{1,2})(?::?(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?\b/i
+            );
+            
+            if (!timeMatch) return null;
+
+            let hours = parseInt(timeMatch[1]);
+            const minutes = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
+            const period = (timeMatch[3] || '').toLowerCase().replace(/\./g, '');
+
+            // Handle 12-hour format
+            if (period === 'pm' && hours < 12) hours += 12;
+            if (period === 'am' && hours === 12) hours = 0;
+
+            // Handle 24-hour format
+            if (!period && hours >= 12) hours -= 12;
+
+            return { hours, minutes };
+        }
+
+
+        function getNextDayInstance(targetDay) {
+            const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+            const targetIndex = days.indexOf(targetDay.toLowerCase());
+            const todayIndex = new Date().getDay();
+            
+            let offset = targetIndex - todayIndex;
+            if (offset <= 0) offset += 7;
+            
+            const nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + offset);
+            return nextDate;
+        }
+
+        // Date Handling Functions
+         // Enhanced date parsing
+         function parseVoiceCommand(transcript) {
+            const now = new Date();
+            let date = new Date(now);
+            const lowerTranscript = transcript.toLowerCase();
+
+            // Handle "next [day]" and "coming [day]" patterns
+            const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+            const dayMatch = lowerTranscript.match(/(next|coming)\s(\w+)/i);
+            
+            if (dayMatch) {
+                const targetDay = dayMatch[2].toLowerCase();
+                if (days.includes(targetDay)) {
+                    date = getNextDayInstance(targetDay);
+                }
+            }
+
+            // Handle "tomorrow"
+            if (lowerTranscript.includes('tomorrow')) {
+                date.setDate(date.getDate() + 1);
+            }
+
+            // Parse time
+            const timeInfo = parseTimeString(lowerTranscript);
+            if (timeInfo) {
+                date.setHours(timeInfo.hours, timeInfo.minutes, 0, 0);
+            }
+
+            // Adjust if date/time is in past
+            if (date < now) {
+                if (timeInfo) {
+                    // If time is specified but passed, move to next week
+                    date.setDate(date.getDate() + 7);
+                } else {
+                    // If no time specified, keep date but reset to 9 AM
+                    date.setHours(9, 0, 0, 0);
+                }
+            }
+
+            return date;
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatTime(date) {
+            return date.toTimeString().substring(0, 5);
+        }
+
+        function formatDisplayDateTime(dateString, timeString) {
+            const date = new Date(`${dateString}T${timeString}`);
+            return date.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+// Add this function in the appropriate place (after createTaskCard)
+function addTaskToUI(task) {
+    const taskCard = document.createElement('div');
+    taskCard.className = 'task-card';
+    taskCard.setAttribute('data-id', task.id);
+    taskCard.innerHTML = `
+        <div class="task-category" style="background: ${getCategoryColor(task.category)}">
+            ${task.category}
+        </div>
+        <h3>${task.title}</h3>
+        <p>${task.description}</p>
+        <div class="task-date">
+            <i class="fas fa-clock"></i> 
+            ${new Date(`${task.task_date}T${task.start_time || '00:00'}`).toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })}
+        </div>
+        <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+    `;
+    tasksContainer.prepend(taskCard);
+}
+
+// Then modify the loadTasks function to use this:
+
+        // Task Management Functions
+        async function loadTasks() {
+            try {
+                const response = await fetch(`${API_BASE}?action=get_tasks`);
+                if (!response.ok) throw new Error('Failed to load tasks');
+                
+                const tasks = await response.json();
+                tasksContainer.innerHTML = tasks.map(createTaskCard).join('');
+            } catch (error) {
+                showStatus('Failed to load tasks: ' + error.message, 'error');
+            }
+        }
+
+        function createTaskCard(task) {
+            return `
+                <div class="task-card" data-id="${task.id}">
+                    <div class="task-category" style="background: ${getCategoryColor(task.category)}">
+                        ${task.category}
+                    </div>
+                    <h3>${task.title}</h3>
+                    <p>${task.description}</p>
+                    <div class="task-date">
+                        <i class="fas fa-clock"></i>
+                        ${formatDisplayDateTime(task.task_date, task.start_time)}
+                    </div>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                </div>
+            `;
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('Delete this task permanently?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}?action=delete_task&id=${taskId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) throw new Error('Deletion failed');
+                document.querySelector(`.task-card[data-id="${taskId}"]`)?.remove();
+                showStatus('Task deleted', 'success');
+            } catch (error) {
+                showStatus(error.message, 'error');
+            }
+        }
+
+        // Helper Functions
+        function getCategoryColor(category) {
+            const colors = {
+                'work': '#4361ee',
+                'personal': '#3f37c9',
+                'study': '#4895ef',
+                'shopping': '#2ecc71',
+                'uncategorized': '#6c757d'
+            };
+            const normalized = (category || 'uncategorized').toLowerCase();
+            return colors[normalized] || colors.uncategorized;
+        }
+
+        function showStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${type === 'error' ? 'status-error' : 'status-success'}`;
+        }
+
+        function resetRecordingState() {
+            voiceBtn.classList.remove('recording');
+            voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Recording';
+        }
+
+        function handleRecognitionError(event) {
+            const errors = {
+                'network': 'Network error',
+                'not-allowed': 'Microphone access denied',
+                'no-speech': 'No speech detected'
+            };
+            showStatus(errors[event.error] || 'Recognition error', 'error');
+            resetRecordingState();
+        }
+
+        async function checkMicrophonePermission() {
+            try {
+                const status = await navigator.permissions.query({ name: 'microphone' });
+                if (status.state === 'denied') {
+                    showStatus('Enable microphone access in browser settings', 'error');
+                    voiceBtn.disabled = true;
+                }
+            } catch (error) {
+                console.error('Permission check failed:', error);
+            }
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head section remains the same -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in & Sign up Form</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="/manifest.json">
+
+  </head>
+  <body>
+    <main>
+      <div class="box">
+        <div class="inner-box">
+          <div class="forms-wrap">
+            <!-- Modified Sign-in Form -->
+            <form action="index.html" autocomplete="off" class="sign-in-form">
+              <div class="logo">
+                <img src="./img/logo.png" alt="easyclass" />
+                <h4>MindFul</h4>
+              </div>
+
+              <div class="heading">
+                <h2>Welcome Back</h2>
+                <h6>Not registered yet?</h6>
+                <a href="#" class="toggle">Sign up</a>
+              </div>
+
+              <div class="actual-form">
+                <div class="input-wrap">
+                  <input
+                    type="email"
+                    id="email1"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Email</label>
+                </div>
+
+                <div class="input-wrap">
+                  <input
+                    type="password"
+                    minlength="4"
+                    id="pass1"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Password</label>
+                </div>
+
+                <input type="submit" value="Sign In" class="sign-btn" />
+
+                <p class="text">
+                  Forgotten your password or your login details?
+                  <a href="#">Get help</a> signing in
+                </p>
+              </div>
+            </form>
+
+            <!-- Modified Sign-up Form with Additional Fields -->
+            <form action="index.html" autocomplete="off" class="sign-up-form">
+              <div class="logo">
+                <img src="./img/logo.png" alt="MindFul" />
+                <h4>MindFul</h4>
+              </div>
+
+              <div class="heading">
+                <h2>Get Started</h2>
+                <h6>Already have an account?</h6>
+                <a href="#" class="toggle">Sign in</a>
+              </div>
+
+              <div class="actual-form">
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    minlength="4"
+                    id="name1"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Name</label>
+                </div>
+
+                <div class="input-wrap">
+                  <input
+                    type="email"
+                    id="email2"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Email</label>
+                </div>
+
+                <div class="input-wrap">
+                  <input
+                    type="number"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                    id="age"
+                    min="13"
+                    max="100"
+                  />
+                  <label>Age</label>
+                </div>
+
+                <div class="input-wrap">
+                  <select class="input-field" required>
+                    <option value="" disabled selected></option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <label>Gender</label>
+                </div>  
+
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                    placeholder="e.g., Reading, Photography, Coding"
+                  />
+                  <label>Interests</label>
+                </div>
+
+                <div class="input-wrap">
+                  <select class="input-field" required>
+                    <option value="" disabled selected></option>
+                    <option value="student">Student</option>
+                    <option value="professor">Professor</option>
+                    <option value="professional">Professional</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <label>Designation</label>
+                </div>
+
+                <div class="input-wrap">
+                  <textarea
+                    class="input-field textarea"
+                    required
+                    placeholder="e.g., Complete current semester with distinction"
+                  ></textarea>
+                  <label>Short-term Goals</label>
+                </div>
+
+                <div class="input-wrap">
+                  <textarea
+                    class="input-field textarea"
+                    required
+                    placeholder="e.g., Become a Senior Software Engineer in 5 years"
+                  ></textarea>
+                  <label>Long-term Goals</label>
+                </div>
+
+                <div class="input-wrap">
+                  <input
+                    type="password"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
+                    id="pass2"
+                    required
+                  />
+                  <label>Password</label>
+                </div>
+
+                <input type="submit" value="Sign Up" class="sign-btn" />
+
+                <p class="text">
+                  By signing up, I agree to the
+                  <a href="#">Terms of Services</a> and
+                  <a href="#">Privacy Policy</a>
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <!-- Carousel section remains the same -->
+          <div class="carousel">
+            <div class="images-wrapper">
+              <img src="./img/image1.png" class="image img-1 show" alt="" />
+              <img src="./img/image2.png" class="image img-2" alt="" />
+              <img src="./img/image3.png" class="image img-3" alt="" />
+            </div>
+
+            <div class="text-slider">
+              <div class="text-wrap">
+                <div class="text-group">
+                  <h2>Organise Smarter-Achive More</h2>
+                  <h2>Take Contol of Your life</h2>
+                  <h2>Join The Community</h2>
+                </div>
+              </div>
+
+              <div class="bullets">
+                <span class="active" data-value="1"></span>
+                <span data-value="2"></span>
+                <span data-value="3"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script type="module" src="register.js" defer></script>
+  </body>
+</html>

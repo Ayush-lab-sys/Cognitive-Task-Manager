@@ -1,0 +1,926 @@
+[2025-03-26 05:35:44] Task created successfully. ID: 30
+[2025-03-26 05:39:37] Task created successfully. ID: 31
+[2025-03-26 05:50:21] Task created successfully. ID: 32
+[2025-03-26 05:56:28] Task created successfully. ID: 33
+[2025-03-26 06:49:34] Task created successfully. ID: 35
+[2025-03-26 06:57:12] Task created successfully. ID: 36
+[2025-03-26 07:07:21] Task created successfully. ID: 37
+[2025-03-26 07:07:54] Task created successfully. ID: 38
+[2025-03-26 09:04:45] Task created successfully. ID: 39
+[2025-03-26 09:05:23] Task created successfully. ID: 40
+[2025-03-26 09:05:35] Task 39 marked as completed
+[2025-03-27 09:58:54] Task 31 marked as completed
+[2025-03-27 09:59:15] Task created successfully. ID: 41
+[2025-03-27 10:04:05] Task 41 marked as completed
+[2025-03-27 10:04:47] Task created successfully. ID: 42
+[2025-03-27 10:10:25] Task created successfully. ID: 43
+[2025-03-27 10:15:03] Task 43 marked as completed
+[2025-03-27 10:15:25] Task created successfully. ID: 44
+[2025-03-27 10:23:25] Task created successfully. ID: 45
+[2025-03-27 10:34:39] Received Task Data: Array
+(
+    [title] => Take medicine daily
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 15:04
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 10:34:39] SQL Params: Array
+(
+    [:title] => Take medicine daily
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 15:04
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => 
+)
+
+[2025-03-27 10:34:39] Task created successfully. ID: 46, Notification Message: 
+[2025-03-27 10:44:54] Received Task Data: Array
+(
+    [title] => do the house work
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 15:14
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 10:44:54] SQL Params: Array
+(
+    [:title] => do the house work
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 15:14
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 10:44:54] Task created successfully. ID: 47, Notification Message: Do the job
+[2025-03-27 10:59:03] Received Task Data: Array
+(
+    [title] => Complete the ppt
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 15:29
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 10:59:03] SQL Params: Array
+(
+    [:title] => Complete the ppt
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 15:29
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 10:59:03] Task created successfully. ID: 48, Notification Message: Do the job
+[2025-03-27 11:00:01] Received Task Data: 
+[2025-03-27 11:00:01] Global Exception: Missing required fields: title or task_date
+[2025-03-27 11:54:09] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 16:23
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 11:54:09] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 16:23
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 11:54:09] Task created successfully. ID: 49, Notification Message: Do the job
+[2025-03-27 11:54:21] Received Task Data: 
+[2025-03-27 11:54:21] Global Exception: Missing required fields: title or task_date
+[2025-03-27 11:54:38] Received Task Data: 
+[2025-03-27 11:54:38] Global Exception: Missing required fields: title or task_date
+[2025-03-27 12:05:56] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 16:35
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 12:05:56] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 16:35
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 12:05:56] Task Insertion Error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'rescheduleTimer' cannot be null
+[2025-03-27 12:06:32] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 16:36
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 12:06:32] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 16:36
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 12:06:32] Task created successfully. ID: 50, Notification Message: Do the job
+[2025-03-27 13:50:17] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 18:20
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 13:50:17] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 18:20
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 13:50:17] Task created successfully. ID: 51, Notification Message: Do the job
+[2025-03-27 14:05:34] Received Task Data: Array
+(
+    [title] => Take medicine daily
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 23:35
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 14:05:34] SQL Params: Array
+(
+    [:title] => Take medicine daily
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 23:35
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 14:05:34] Task created successfully. ID: 52, Notification Message: Do the job
+[2025-03-27 14:12:02] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 18:42
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 14:12:02] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 18:42
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 14:12:02] Task created successfully. ID: 53, Notification Message: Do the job
+[2025-03-27 14:13:49] Task 47 marked as completed
+[2025-03-27 14:13:58] Received Task Data: Array
+(
+    [title] => do the house work
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 18:43
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 14:13:58] SQL Params: Array
+(
+    [:title] => do the house work
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 18:43
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 14:13:58] Task created successfully. ID: 54, Notification Message: Do the job
+[2025-03-27 14:17:56] Received Task Data: Array
+(
+    [title] => Take medicine daily
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 18:47
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 14:17:56] SQL Params: Array
+(
+    [:title] => Take medicine daily
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 18:47
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 14:17:56] Task created successfully. ID: 55, Notification Message: Do the job
+[2025-03-27 14:35:00] Received Task Data: Array
+(
+    [title] => Take medicine daily
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 19:04
+    [priority] => high
+    [category] => uncategorized
+)
+
+[2025-03-27 14:35:00] SQL Params: Array
+(
+    [:title] => Take medicine daily
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 19:04
+    [:end_time] => 
+    [:priority] => high
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 14:35:00] Task created successfully. ID: 56, Notification Message: Do the job
+[2025-03-27 18:51:49] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-27
+    [start_time] => 23:21
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 18:51:49] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-27
+    [:start_time] => 23:21
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationmessage] => Do the job
+)
+
+[2025-03-27 18:51:49] Task created successfully. ID: 57, Notification message: Do the job
+[2025-03-27 18:55:03] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 23:25
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 18:55:03] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 23:25
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 18:55:03] Task created successfully. ID: 58, Notification message: Do the job
+[2025-03-27 19:01:13] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 23:31
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:01:13] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 23:31
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:01:13] Task created successfully. ID: 59, Notification message: Do the job
+[2025-03-27 19:27:10] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-28
+    [start_time] => 23:57
+    [priority] => high
+    [category] => uncategorized
+)
+
+[2025-03-27 19:27:10] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-28
+    [:start_time] => 23:57
+    [:end_time] => 
+    [:priority] => high
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:27:10] Task created successfully. ID: 60, Notification message: Do the job
+[2025-03-27 19:29:50] Received Task Data: Array
+(
+    [title] => Finish budget report
+    [description] => wwwwwwwwwwwww
+    [task_date] => 2025-03-28
+    [start_time] => 23:59
+    [priority] => medium
+    [category] => other
+)
+
+[2025-03-27 19:29:50] SQL Params: Array
+(
+    [:title] => Finish budget report
+    [:description] => wwwwwwwwwwwww
+    [:task_date] => 2025-03-28
+    [:start_time] => 23:59
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => other
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:29:50] Task created successfully. ID: 61, Notification message: Do the job
+[2025-03-27 19:32:34] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => aaaaaaaaaaaaa
+    [task_date] => 2025-03-29
+    [start_time] => 00:02
+    [priority] => medium
+    [category] => other
+)
+
+[2025-03-27 19:32:34] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => aaaaaaaaaaaaa
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:02
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => other
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:32:34] Task created successfully. ID: 62, Notification message: Do the job
+[2025-03-27 19:36:28] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 04:06
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:36:28] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 04:06
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:36:28] Task created successfully. ID: 63, Notification message: Do the job
+[2025-03-27 19:36:37] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 04:06
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:36:37] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 04:06
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:36:37] Task created successfully. ID: 64, Notification message: Do the job
+[2025-03-27 19:37:07] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 04:06
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:37:07] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 04:06
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:37:07] Task created successfully. ID: 65, Notification message: Do the job
+[2025-03-27 19:43:54] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 00:13
+    [priority] => low
+    [category] => uncategorized
+)
+
+[2025-03-27 19:43:54] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:13
+    [:end_time] => 
+    [:priority] => low
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:43:54] Task created successfully. ID: 66, Notification message: Do the job
+[2025-03-27 19:47:29] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-04-12
+    [start_time] => 00:17
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:47:29] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-04-12
+    [:start_time] => 00:17
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the timely stuff
+)
+
+[2025-03-27 19:47:29] Task created successfully. ID: 67, Notification message: Do the timely stuff
+[2025-03-27 19:49:12] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 00:19
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:49:12] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:19
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:49:12] Task created successfully. ID: 68, Notification message: Do the job
+[2025-03-27 19:51:40] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 00:21
+    [priority] => medium
+    [category] => uncategorized
+)
+
+[2025-03-27 19:51:40] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:21
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Do the job
+)
+
+[2025-03-27 19:51:40] Task created successfully. ID: 69, Notification message: Do the job
+[2025-03-27 19:52:43] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-04-05
+    [start_time] => 05:22
+    [priority] => high
+    [category] => entertainment
+    [notificationMessage] => must do the task
+    [action] => save_task
+)
+
+[2025-03-27 19:52:43] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-04-05
+    [:start_time] => 05:22
+    [:end_time] => 
+    [:priority] => high
+    [:category] => entertainment
+    [:notificationMessage] => must do the task
+)
+
+[2025-03-27 19:52:43] Task created successfully. ID: 70, Notification message: must do the task
+[2025-03-27 19:54:27] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => dddddddddddddddd
+    [task_date] => 2025-04-05
+    [start_time] => 05:22
+    [priority] => high
+    [category] => entertainment
+    [notificationMessage] => must do the task
+    [action] => save_task
+)
+
+[2025-03-27 19:54:27] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => dddddddddddddddd
+    [:task_date] => 2025-04-05
+    [:start_time] => 05:22
+    [:end_time] => 
+    [:priority] => high
+    [:category] => entertainment
+    [:notificationMessage] => must do the task
+)
+
+[2025-03-27 19:54:27] Task created successfully. ID: 71, Notification message: must do the task
+[2025-03-27 19:55:36] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => ddddddddddddddd
+    [task_date] => 2025-03-29
+    [start_time] => 00:25
+    [priority] => medium
+    [category] => entertainment
+    [notificationMessage] => must do the task
+    [action] => save_task
+)
+
+[2025-03-27 19:55:36] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => ddddddddddddddd
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:25
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => entertainment
+    [:notificationMessage] => must do the task
+)
+
+[2025-03-27 19:55:36] Task created successfully. ID: 72, Notification message: must do the task
+[2025-03-27 19:56:20] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => ffffffffffffffffffff
+    [task_date] => 2025-03-31
+    [start_time] => 00:26
+    [priority] => medium
+    [category] => entertainment
+    [notificationMessage] => Youve got this! 💪
+    [action] => save_task
+)
+
+[2025-03-27 19:56:20] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => ffffffffffffffffffff
+    [:task_date] => 2025-03-31
+    [:start_time] => 00:26
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => entertainment
+    [:notificationMessage] => Youve got this! 💪
+)
+
+[2025-03-27 19:56:20] Task created successfully. ID: 73, Notification message: Youve got this! 💪
+[2025-03-27 19:57:15] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => ffffffffffffffffff
+    [task_date] => 2025-03-29
+    [start_time] => 00:27
+    [priority] => medium
+    [category] => entertainment
+    [notificationMessage] => must do the task
+    [action] => save_task
+)
+
+[2025-03-27 19:57:15] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => ffffffffffffffffff
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:27
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => entertainment
+    [:notificationMessage] => must do the task
+)
+
+[2025-03-27 19:57:15] Task created successfully. ID: 74, Notification message: must do the task
+[2025-03-27 20:01:19] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => ddddddddddddd
+    [task_date] => 2025-03-29
+    [start_time] => 00:31
+    [priority] => medium
+    [category] => entertainment
+    [notificationMessage] => Progress over perfection! 
+    [action] => save_task
+)
+
+[2025-03-27 20:01:19] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => ddddddddddddd
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:31
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => entertainment
+    [:notificationMessage] => Progress over perfection! 
+)
+
+[2025-03-27 20:01:19] Task created successfully. ID: 75, Notification message: Progress over perfection! 
+[2025-03-27 20:01:45] Received Task Data: Array
+(
+    [title] => play chess
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 00:31
+    [priority] => medium
+    [category] => entertainment
+    [notificationMessage] => One step at a time! 
+    [action] => save_task
+)
+
+[2025-03-27 20:01:45] SQL Params: Array
+(
+    [:title] => play chess
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:31
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => entertainment
+    [:notificationMessage] => One step at a time! 
+)
+
+[2025-03-27 20:01:45] Task created successfully. ID: 76, Notification message: One step at a time! 
+[2025-03-27 20:03:29] Received Task Data: Array
+(
+    [title] => Take throid medicine
+    [description] => Take throid medicine
+    [task_date] => 2025-03-29
+    [start_time] => 00:33
+    [priority] => medium
+    [category] => health
+    [notificationMessage] => You've got this! 💪
+    [action] => save_task
+)
+
+[2025-03-27 20:03:29] SQL Params: Array
+(
+    [:title] => Take throid medicine
+    [:description] => Take throid medicine
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:33
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => health
+    [:notificationMessage] => You've got this! 💪
+)
+
+[2025-03-27 20:03:29] Task created successfully. ID: 77, Notification message: You've got this! 💪
+[2025-03-27 20:07:38] Received Task Data: Array
+(
+    [title] => Take throid medicine
+    [description] => Take throid medicine
+    [task_date] => 2025-03-29
+    [start_time] => 00:37
+    [priority] => medium
+    [category] => health
+    [notificationMessage] => One step at a time! 
+    [action] => save_task
+)
+
+[2025-03-27 20:07:38] SQL Params: Array
+(
+    [:title] => Take throid medicine
+    [:description] => Take throid medicine
+    [:task_date] => 2025-03-29
+    [:start_time] => 00:37
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => health
+    [:notificationMessage] => One step at a time! 
+)
+
+[2025-03-27 20:07:38] Task created successfully. ID: 78, Notification message: One step at a time! 
+[2025-03-28 07:21:16] Received Task Data: Array
+(
+    [title] => buy the thyroid medicines from shop
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 11:51
+    [priority] => medium
+    [category] => uncategorized
+    [notificationMessage] => One step at a time! 
+    [action] => save_task
+)
+
+[2025-03-28 07:21:16] SQL Params: Array
+(
+    [:title] => buy the thyroid medicines from shop
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 11:51
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => One step at a time! 
+)
+
+[2025-03-28 07:21:16] Task created successfully. ID: 79, Notification message: One step at a time! 
+[2025-03-28 07:24:39] Received Task Data: Array
+(
+    [title] => buy the thyroid medicines from shop
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 11:54
+    [priority] => medium
+    [category] => uncategorized
+    [notificationMessage] => You've got this! 💪
+    [action] => save_task
+)
+
+[2025-03-28 07:24:39] SQL Params: Array
+(
+    [:title] => buy the thyroid medicines from shop
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 11:54
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => You've got this! 💪
+)
+
+[2025-03-28 07:24:39] Task created successfully. ID: 80, Notification message: You've got this! 💪
+[2025-03-28 07:29:27] Received Task Data: Array
+(
+    [title] => buy the thyroid medicines from shop
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 11:59
+    [priority] => medium
+    [category] => uncategorized
+    [notificationMessage] => You've got this! 💪
+    [action] => save_task
+)
+
+[2025-03-28 07:29:27] SQL Params: Array
+(
+    [:title] => buy the thyroid medicines from shop
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 11:59
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => You've got this! 💪
+)
+
+[2025-03-28 07:29:27] Task created successfully. ID: 81, Notification message: You've got this! 💪
+[2025-03-28 09:29:11] Received Task Data: Array
+(
+    [title] => Buy the dog food for pet
+    [description] => 
+    [task_date] => 2025-03-29
+    [start_time] => 13:59
+    [priority] => medium
+    [category] => uncategorized
+    [notificationMessage] => Progress over perfection! 
+    [action] => save_task
+)
+
+[2025-03-28 09:29:11] SQL Params: Array
+(
+    [:title] => Buy the dog food for pet
+    [:description] => 
+    [:task_date] => 2025-03-29
+    [:start_time] => 13:59
+    [:end_time] => 
+    [:priority] => medium
+    [:category] => uncategorized
+    [:notificationMessage] => Progress over perfection! 
+)
+
+[2025-03-28 09:29:11] Task created successfully. ID: 82, Notification message: Progress over perfection! 

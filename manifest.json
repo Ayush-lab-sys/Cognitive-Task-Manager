@@ -1,0 +1,22 @@
+{
+  "name": "MindFull Tasker",
+  "short_name": "Tasks",
+  "description": "A simple PWA task manager with reminders",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#4ecca3",
+  "icons": [
+    {
+      "src": "./img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
